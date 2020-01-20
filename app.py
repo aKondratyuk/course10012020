@@ -2,9 +2,10 @@ import os
 import random
 import requests
 
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session, flash, abort
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
+from flask_session import Session
 from datetime import datetime
 from ai.classes import *
 from ai.helper import transformData
@@ -19,7 +20,8 @@ from forms.user_has_skill_form import UserSkillForm
 from forms.profession_form import ProfessionForm
 from forms.profession_has_skill_form import ProfessionSkillForm
 from forms.vacancy_form import VacancyForm
-from  forms.real_form import SearchForm
+from forms.real_form import SearchForm
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = db_string
@@ -34,7 +36,23 @@ manager.add_command('db', MigrateCommand)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        return render_template('index.html')
+
+@app.route('/login', methods=['POST'])
+def do_admin_login():
+    if request.form['password'] == 'password' and request.form['username'] == 'admin':
+        session['logged_in'] = True
+    else:
+        flash('wrong password!')
+    return index()
+
+@app.route("/logout")
+def logout():
+    session['logged_in'] = False
+    return index()
 
 @app.route('/user', methods=['GET', 'POST'])
 def user():
