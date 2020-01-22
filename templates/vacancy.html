@@ -44,14 +44,14 @@ input[type=submit]:hover {
                 {{ form.id }}
                 {{ form.name.label }}
                 {{ form.name }}
-                {{ form.duties.label }}
-                {{ form.duties }}
-                {{ form.salary.label }}
-                {{ form.salary }}
-                {{ form.description.label }}
-                {{ form.description }}
-                {{ form.profession_id.label }}
-                {{ form.profession_id }}
+{#                {{ form.duties.label }}#}
+{#                {{ form.duties }}#}
+{#                {{ form.salary.label }}#}
+{#                {{ form.salary }}#}
+{#                {{ form.description.label }}#}
+{#                {{ form.description }}#}
+{#                {{ form.profession_id.label }}#}
+{#                {{ form.profession_id }}#}
                 <input type="submit" value="Submit">
             </form>
         </div>
@@ -59,23 +59,23 @@ input[type=submit]:hover {
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Duties</th>
-                        <th scope="col">Salary</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Profession</th>
+                        <th scope="col">Tag name</th>
+{#                        <th scope="col">Duties</th>#}
+{#                        <th scope="col">Salary</th>#}
+{#                        <th scope="col">Description</th>#}
+{#                        <th scope="col">Profession</th>#}
                         <th scope="col"></th>
                     </tr>
                 </thead>
                 <tr>
                 {% for vacancy in vacancies %}
                     <td> {{vacancy.name }} </td>
-                    <td> {{vacancy.duties}} </td>
-                    <td> {{vacancy.salary }} </td>
-                    <td> {{vacancy.description}}</td>
-                    <td> {{vacancy.profession_id }} </td>
-                    <td><a href="/vacancy/edit/{{vacancy.id}}" class="btn btn-success">Edit</a> </td>
-                    <td><a href="/vacancy/delete/{{vacancy.id}}" class="btn btn-danger">Delete</a> </td>
+{#                    <td> {{vacancy.duties}} </td>#}
+{#                    <td> {{vacancy.salary }} </td>#}
+{#                    <td> {{vacancy.description}}</td>#}
+{#                    <td> {{vacancy.profession_id }} </td>#}
+                    <td><a href="/tags/edit/{{vacancy.id}}" class="btn btn-success">Edit</a> </td>
+                    <td><a href="/tags/delete/{{vacancy.id}}" class="btn btn-danger">Delete</a> </td>
                 </tr>
                 {% endfor %}
 

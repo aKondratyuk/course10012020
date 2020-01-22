@@ -6,7 +6,7 @@ from wtforms.fields.html5 import IntegerField
 class VacancyForm(FlaskForm):
     id = HiddenField("Id")
 
-    name = StringField("Vacancy name: ",[
+    name = StringField("Tag name: ",[
         validators.DataRequired("Please enter name."),
     ])
 

@@ -2,6 +2,26 @@ from sqlalchemy import Column, String, Integer, Date, ForeignKey, Float
 
 from dal.db import Base
 
+class Username(Base):
+    __tablename__ = 'username'
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String())
+    password = Column(String())
+
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+    def serialize(self):
+        return {
+            'id' : self.id,
+            'username' : self.name,
+            'password' : self.password
+        }
 
 class Person(Base):
 

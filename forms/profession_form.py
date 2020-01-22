@@ -6,21 +6,21 @@ from wtforms.fields.html5 import IntegerField
 class ProfessionForm(FlaskForm):
    id = HiddenField("Id")
 
-   name = StringField("Profession name: ",[
-        validators.DataRequired("Please enter name."),
+   name = StringField("Image URL: ",[
+        validators.DataRequired("Please enter url"),
    ])
 
-   minimal_work_expirience = IntegerField("Minimal work expirience: ",
-        [validators.DataRequired("Minimal work expirience required"), validators.NumberRange(min=0, max=100)]
+   minimal_work_expirience = IntegerField("Size: ",
+        [validators.DataRequired("Minimal work expirience required"), validators.NumberRange(min=1, max=5)]
     )
 
-   minimal_education = StringField("Minimal education: ", [
+   minimal_education = StringField("Format of Image: ", [
        validators.DataRequired("Please enter your birthday."),
        validators.length(4, 60, "Pleas select between 4 to 60")
    ])
 
-   category = StringField("Category: ",[
-       validators.DataRequired("Please enter category."),
+   category = StringField("Topic: ",[
+       validators.DataRequired("Please enter topic."),
        validators.length(10, 100, "Pleas select between 10 to 100")
     ])
 

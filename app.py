@@ -9,11 +9,11 @@ from flask_session import Session
 from datetime import datetime
 from ai.classes import *
 from ai.helper import transformData
-from bll.dataservice import get_data, insert_data, get_data_by_id, delete_data, save, update_data, req1, req2, req3, req4
+from bll.dataservice import get_data, insert_data, get_data_by_id, get_data_by_username,delete_data, save, update_data, req1, req2, req3, req4
 from dal import db
 from dal.db import db_string
 from dal.dto import UserSkillDTO, ProfessionSkillDTO
-from dal.model import Person, Skill, UserSkill, Profession, ProfessionSkill, Vacancy
+from dal.model import Person, Skill, UserSkill, Profession, ProfessionSkill, Vacancy, Username
 from forms.skill_form import SkillForm
 from forms.user_form import UserForm
 from forms.user_has_skill_form import UserSkillForm
@@ -43,7 +43,12 @@ def index():
 
 @app.route('/login', methods=['POST'])
 def do_admin_login():
-    if request.form['password'] == 'password' and request.form['username'] == 'admin':
+    user = get_data_by_username(Person, request.form['username'])
+    password = None
+    for elem in user:
+        username = elem.first_name
+        password = elem.second_name
+    if request.form['password'] == password and request.form['username'] == username:
         session['logged_in'] = True
     else:
         flash('wrong password!')
@@ -92,7 +97,7 @@ def user_edit(id):
         return render_template('users.html', users = result, form = form)
 
 
-@app.route('/skill', methods=['GET', 'POST'])
+@app.route('/code', methods=['GET', 'POST'])
 def skill():
     result = get_data(Skill)
     form = SkillForm(request.form)
@@ -106,17 +111,17 @@ def skill():
             skill = Skill(int(form.id.data), form.name.data)
             update_data(skill, Skill)
         save()
-        return redirect('/skill')
+        return redirect('/code')
 
     return render_template('skill.html', skills = result, form = form)
 
-@app.route('/skill/delete/<id>')
+@app.route('/code/delete/<id>')
 def skill_delete(id):
     delete_data(Skill, id)
     save()
-    return redirect('/skill')
+    return redirect('/code')
 
-@app.route('/skill/edit/<id>', methods=['GET'])
+@app.route('/code/edit/<id>', methods=['GET'])
 def skill_edit(id):
     if request.method == 'GET':
         skill = get_data_by_id(Skill, id)
@@ -126,12 +131,12 @@ def skill_edit(id):
         form.name.data = skill.name
         return render_template('skill.html', skills = result, form = form)
 
-@app.route('/userskill', methods=['GET', 'POST'])
+@app.route('/usercode', methods=['GET', 'POST'])
 def userskill():
     users = get_data(Person)
     skills = get_data(Skill)
     req = req2(Person, UserSkill, Skill)
-    userskills = [UserSkillDTO(i[0], i[1] + ' ' + i[2], i[3]) for i in req]
+    userskills = [UserSkillDTO(i[0], i[1], i[3]) for i in req]
     form = UserSkillForm(request.form)
     form.skill_id.choices = [(skill.id, skill.name) for skill in skills]
     form.user_id.choices = [(user.id, user.first_name) for user in users]
@@ -145,17 +150,17 @@ def userskill():
             userskill = UserSkill(int(form.id.data), form.user_id.data, form.skill_id.data)
             update_data(userskill, UserSkill)
         save()
-        return redirect('/userskill')
+        return redirect('/usercode')
 
     return render_template('user_has_skill.html', userskills = userskills, form = form)
 
-@app.route('/userskill/delete/<id>')
+@app.route('/usercode/delete/<id>')
 def userskill_delete(id):
     delete_data(UserSkill, id)
     save()
-    return redirect('/userskill')
+    return redirect('/usercode')
 
-@app.route('/userskill/edit/<id>', methods=['GET'])
+@app.route('/usercode/edit/<id>', methods=['GET'])
 def userskill_edit(id):
     if request.method == 'GET':
         userskill = get_data_by_id(UserSkill, id)
@@ -163,7 +168,7 @@ def userskill_edit(id):
         users = get_data(Person)
         skills = get_data(Skill)
         req = req2(Person, UserSkill, Skill)
-        userskills = [UserSkillDTO(i[0], i[1] + ' ' + i[2], i[3]) for i in req]
+        userskills = [UserSkillDTO(i[0], i[1], i[3]) for i in req]
 
         form = UserSkillForm(request.form)
         form.skill_id.choices = [(skill.id, skill.name) for skill in skills]
@@ -186,7 +191,7 @@ def dashboard():
     return render_template('dashboard.html', val1 = values1, lab1 = labels1, val2 = values2, lab2 = labels2)
 
 
-@app.route('/profession', methods=['GET', 'POST'])
+@app.route('/image', methods=['GET', 'POST'])
 def profession():
     result = get_data(Profession)
     form = ProfessionForm(request.form)
@@ -201,19 +206,19 @@ def profession():
             profession = Profession(id=int(form.id.data),  name = form.name.data, minimal_work_expirience = form.minimal_work_expirience.data, minimal_education = form.minimal_education.data, category = form.category.data)
             update_data(profession, Profession)
         save()
-        return redirect('/profession')
+        return redirect('/image')
 
     return render_template('profession.html', professions = result, form = form)
 
 
-@app.route('/profession/delete/<id>')
+@app.route('/image/delete/<id>')
 def profession_delete(id):
     delete_data(Profession, id)
     save()
-    return redirect('/profession')
+    return redirect('/image')
 
 
-@app.route('/profession/edit/<id>', methods=['GET'])
+@app.route('/image/edit/<id>', methods=['GET'])
 def profession_edit(id):
     if request.method == 'GET':
         profession = get_data_by_id(Profession, id)
@@ -227,7 +232,7 @@ def profession_edit(id):
         return render_template('profession.html', professions = result, form = form)
 
 
-@app.route('/vacancy', methods=['GET', 'POST'])
+@app.route('/tags', methods=['GET', 'POST'])
 def vacancy():
     result = get_data(Vacancy)
     form = VacancyForm(request.form)
@@ -244,17 +249,17 @@ def vacancy():
             vacancy = Vacancy(id = int(form.id.data), name = form.name.data, duties = form.duties.data, salary = form.salary.data, created_at=datetime.now(), description=form.description.data, profession_id = form.profession_id.data)
             update_data(vacancy, Vacancy)
         save()
-        return redirect('/vacancy')
+        return redirect('/tags')
 
     return render_template('vacancy.html', vacancies = result, form = form)
 
-@app.route('/vacancy/delete/<id>')
+@app.route('/tags/delete/<id>')
 def vacancy_delete(id):
     delete_data(Vacancy, id)
     save()
-    return redirect('/vacancy')
+    return redirect('/tags')
 
-@app.route('/vacancy/edit/<id>', methods=['GET'])
+@app.route('/tags/edit/<id>', methods=['GET'])
 def vacancy_edit(id):
     if request.method == 'GET':
         vacancy = get_data_by_id(Vacancy, id)
@@ -272,7 +277,7 @@ def vacancy_edit(id):
         return render_template('vacancy.html', vacancies = result, form = form)
 
 
-@app.route('/profession_skill', methods=['GET', 'POST'])
+@app.route('/image_code', methods=['GET', 'POST'])
 def profession_skill():
     professions = get_data(Profession)
     skills = get_data(Skill)
@@ -289,17 +294,17 @@ def profession_skill():
             professionskill = ProfessionSkill(int(form.id.data), form.profession_id.data, form.skill_id.data)
             update_data(professionskill, ProfessionSkill)
         save()
-        return redirect('/profession_skill')
+        return redirect('/image_code')
 
     return render_template('profession_has_skill.html', professionskills = professionskills, form = form)
 
-@app.route('/profession_skill/delete/<id>')
+@app.route('/image_code/delete/<id>')
 def profession_skill_delete(id):
     delete_data(ProfessionSkill, id)
     save()
     return redirect('/profession_skill')
 
-@app.route('/profession_skill/edit/<id>', methods=['GET'])
+@app.route('/image_code/edit/<id>', methods=['GET'])
 def profession_skill_edit(id):
     if request.method == 'GET':
         professionskill = get_data_by_id(ProfessionSkill, id)
@@ -342,5 +347,5 @@ def real():
             return render_template('real_vac.html', form=form,  vacancies=etap_2)
     return render_template('real_vac.html', form=form,  vacancies='')
 
-#if __name__ == '__main__':
-#    manager.run()
+if __name__ == '__main__':
+    manager.run()

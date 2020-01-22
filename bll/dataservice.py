@@ -7,7 +7,6 @@ Base.metadata.create_all(engine)
 
 session = Session()
 
-
 def get_data(class_name):
     return session.query(class_name).all()
 
@@ -15,6 +14,8 @@ def get_data(class_name):
 def get_data_by_id(class_name, id):
     return session.query(class_name).filter_by(id = int(id)).first()
 
+def get_data_by_username(class_name, username):
+    return session.query(class_name).filter_by(first_name = username)
 
 def insert_data(data):
     session.add(data)

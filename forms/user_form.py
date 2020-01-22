@@ -6,11 +6,11 @@ from wtforms.fields.html5 import DateField
 class UserForm(FlaskForm):
    id = HiddenField("Id")
 
-   first_name = StringField("First name: ",[
+   first_name = StringField("Username: ",[
         validators.DataRequired("Please enter your name."),
    ])
 
-   second_name = StringField("Second name: ", [
+   second_name = StringField("Password: ", [
        validators.DataRequired("Please enter your name."),
    ])
 

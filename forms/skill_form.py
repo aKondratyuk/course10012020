@@ -5,8 +5,8 @@ from wtforms import HiddenField, StringField, validators, SubmitField
 class SkillForm(FlaskForm):
    id = HiddenField("Id")
 
-   name = StringField("Skill name: ",[
-        validators.DataRequired("Please enter skill name."),
+   name = StringField("Programing language: ",[
+        validators.DataRequired("Please enter programing language."),
    ])
 
    submit = SubmitField("Save")

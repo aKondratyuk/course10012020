@@ -65,10 +65,10 @@ input[type=submit]:hover {
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Minimal work expirience</th>
-                        <th scope="col">Minimal education</th>
-                        <th scope="col">Category</th>
+                        <th scope="col">Image URL</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">Format</th>
+                        <th scope="col">Topic</th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
@@ -79,8 +79,8 @@ input[type=submit]:hover {
                     <td> {{profession.minimal_work_expirience}} </td>
                     <td> {{profession.minimal_education }}</td>
                     <td> {{profession.category}}</td>
-                    <td><a href="/profession/edit/{{profession.id}}" class="btn btn-success">Edit</a> </td>
-                    <td><a href="/profession/delete/{{profession.id}}" class="btn btn-danger">Delete</a> </td>
+                    <td><a href="/image/edit/{{profession.id}}" class="btn btn-success">Edit</a> </td>
+                    <td><a href="/image/delete/{{profession.id}}" class="btn btn-danger">Delete</a> </td>
                 </tr>
                 {% endfor %}
 
