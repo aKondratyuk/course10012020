@@ -1,8 +1,8 @@
-"""empty message
+"""Initial migration.
 
-Revision ID: 4d25e55bf485
+Revision ID: e98239ad6659
 Revises: 
-Create Date: 2019-12-26 05:12:16.030829
+Create Date: 2020-01-22 21:51:26.011259
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '4d25e55bf485'
+revision = 'e98239ad6659'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -42,6 +42,12 @@ def upgrade():
     op.create_table('skill',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('username',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('username', sa.String(), nullable=True),
+    sa.Column('password', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('professions_skills',
@@ -79,6 +85,7 @@ def downgrade():
     op.drop_table('vacancy')
     op.drop_table('users_skills')
     op.drop_table('professions_skills')
+    op.drop_table('username')
     op.drop_table('skill')
     op.drop_table('profession')
     op.drop_table('person')
