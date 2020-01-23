@@ -14,12 +14,12 @@ from dal import db
 from dal.db import db_string
 from dal.dto import UserSkillDTO, ProfessionSkillDTO
 from dal.model import Person, Skill, UserSkill, Profession, ProfessionSkill, Vacancy, Username
-from forms.skill_form import SkillForm
+from forms.code_form import SkillForm
 from forms.user_form import UserForm
-from forms.user_has_skill_form import UserSkillForm
-from forms.profession_form import ProfessionForm
-from forms.profession_has_skill_form import ProfessionSkillForm
-from forms.vacancy_form import VacancyForm
+from forms.user_has_code_form import UserSkillForm
+from forms.image_form import ProfessionForm
+from forms.image_has_code_form import ProfessionSkillForm
+from forms.tags_form import VacancyForm
 from forms.real_form import SearchForm
 
 
@@ -113,7 +113,7 @@ def skill():
         save()
         return redirect('/code')
 
-    return render_template('skill.html', skills = result, form = form)
+    return render_template('code.html', skills = result, form = form)
 
 @app.route('/code/delete/<id>')
 def skill_delete(id):
@@ -129,7 +129,7 @@ def skill_edit(id):
         form = SkillForm()
         form.id.data = skill.id
         form.name.data = skill.name
-        return render_template('skill.html', skills = result, form = form)
+        return render_template('code.html', skills = result, form = form)
 
 @app.route('/usercode', methods=['GET', 'POST'])
 def userskill():
@@ -152,7 +152,7 @@ def userskill():
         save()
         return redirect('/usercode')
 
-    return render_template('user_has_skill.html', userskills = userskills, form = form)
+    return render_template('user_has_code.html', userskills = userskills, form = form)
 
 @app.route('/usercode/delete/<id>')
 def userskill_delete(id):
@@ -176,7 +176,7 @@ def userskill_edit(id):
         form.id.data = userskill.id
         form.skill_id.data = userskill.skill_id
         form.user_id.data = userskill.user_id
-        return render_template('user_has_skill.html', userskills = userskills, form = form)
+        return render_template('user_has_code.html', userskills = userskills, form = form)
 
 
 @app.route('/dashboard')
@@ -208,7 +208,7 @@ def profession():
         save()
         return redirect('/image')
 
-    return render_template('profession.html', professions = result, form = form)
+    return render_template('image.html', professions = result, form = form)
 
 
 @app.route('/image/delete/<id>')
@@ -229,7 +229,7 @@ def profession_edit(id):
         form.minimal_work_expirience.data = profession.minimal_work_expirience
         form.minimal_education.data = profession.minimal_education
         form.category.data = profession.category
-        return render_template('profession.html', professions = result, form = form)
+        return render_template('image.html', professions = result, form = form)
 
 
 @app.route('/tags', methods=['GET', 'POST'])
@@ -251,7 +251,7 @@ def vacancy():
         save()
         return redirect('/tags')
 
-    return render_template('vacancy.html', vacancies = result, form = form)
+    return render_template('tags.html', vacancies = result, form = form)
 
 @app.route('/tags/delete/<id>')
 def vacancy_delete(id):
@@ -274,7 +274,7 @@ def vacancy_edit(id):
         form.profession_id.data = vacancy.profession_id
         form.profession_id.choices = [(profession.id, profession.name) for profession in professions]
 
-        return render_template('vacancy.html', vacancies = result, form = form)
+        return render_template('tags.html', vacancies = result, form = form)
 
 
 @app.route('/image_code', methods=['GET', 'POST'])
@@ -296,7 +296,7 @@ def profession_skill():
         save()
         return redirect('/image_code')
 
-    return render_template('profession_has_skill.html', professionskills = professionskills, form = form)
+    return render_template('image_has_code.html', professionskills = professionskills, form = form)
 
 @app.route('/image_code/delete/<id>')
 def profession_skill_delete(id):
@@ -320,7 +320,7 @@ def profession_skill_edit(id):
         form.id.data = professionskill.id
         form.skill_id.data = professionskill.skill_id
         form.profession_id.data = professionskill.profession_id
-        return render_template('profession_has_skill.html', professionskills = professionskills, form = form)
+        return render_template('image_has_code.html', professionskills = professionskills, form = form)
 
 
 @app.route('/classification', methods=['GET'])
@@ -332,20 +332,6 @@ def classification():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-@app.route('/real', methods=['GET', 'POST'])
-def real():
-    form = SearchForm(request.form)
-    if request.method == 'POST':
-        input = form.search.data
-        url = 'https://rabota.ua/zapros/'+input+'/%d0%ba%d0%b8%d0%b5%d0%b2'
-        output = requests.get(url).text
-        etap_2 = transformData(output)
-        if etap_2.__contains__('.f-404'):
-            return render_template('real_vac.html', form=form,  vacancies='not found')
-        else:
-            return render_template('real_vac.html', form=form,  vacancies=etap_2)
-    return render_template('real_vac.html', form=form,  vacancies='')
 
 if __name__ == '__main__':
     manager.run()

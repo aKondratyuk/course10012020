@@ -14,14 +14,14 @@ class VacancyForm(FlaskForm):
         validators.DataRequired("Please enter duties."),
     ])
 
-    salary = IntegerField("Salary: ", [
-        validators.DataRequired("Minimal work expirience required")
+    salary = IntegerField("User Trafic: ", [
+        validators.DataRequired("User Trafic is required")
     ])
 
     description = StringField("Description: ", [
         validators.DataRequired("Please enter description."),
     ])
 
-    profession_id = SelectField("profession: ", choices=[], coerce=int)  # ,[validators.DataRequired(),])
+    profession_id = SelectField("Image: ", choices=[], coerce=int)  # ,[validators.DataRequired(),])
 
 submit = SubmitField("Save")
